@@ -19,7 +19,7 @@ function App() {
         >
           Learn React
         </a>
-        <Button variant="contained">Hello World</Button>
+        <Button variant="contained">Let's go!</Button>
       </header>
     </div>
   );
