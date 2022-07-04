@@ -1,7 +1,7 @@
 import { Tournament } from "./Tournament";
 import { Group } from "../dto/Group";
 import { Match } from "../dto/Match";
-import { Participant } from "../dto/Participant";
+// import { Participant } from "../dto/Participant";
 
 
 export class TournamentDataProvider implements Tournament {
