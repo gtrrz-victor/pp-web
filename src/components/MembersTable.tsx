@@ -6,38 +6,24 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import { Group } from '../dto/Group';
+import { Participant } from '../dto/Participant';
 
 
 interface MembersTableProps {
-    group: number
+    group: Group
 }
 
-function createData(
-    name: string,
-    wonMatches: number,
-    lostMatches: number,
-    wonSets: number,
-    lostSets: number,
-) {
-    return { name, wonMatches, lostMatches, wonSets, lostSets };
-}
-
-const rows = [
-    createData('Alberto', 1, 2, 3, 3),
-    createData('Alberto1', 13, 2, 3, 3),
-    createData('Alberto2', 1, 4, 3, 35),
-    createData('Alberto3', 1, 2, 3, 3),
-];
 
 
 const MembersTable = ({ group }: MembersTableProps) => {
-
+    const rows = [...group.participants]
     rows.sort((a, b) => {
-        const matchComparator = b.wonMatches - a.wonMatches
+        const matchComparator = b.matches.wins - a.matches.wins
         if (matchComparator !== 0) return matchComparator
-        const wonSetsComparator = b.wonSets - a.wonSets
+        const wonSetsComparator = b.sets.wins - a.sets.wins
         if (wonSetsComparator !== 0) return wonSetsComparator
-        return a.lostSets - b.lostSets
+        return a.sets.losts - b.sets.losts
     })
 
     return (
@@ -53,18 +39,18 @@ const MembersTable = ({ group }: MembersTableProps) => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {rows.map((row) => (
+                    {rows.map((row,index) => (
                         <TableRow
-                            key={row.name}
+                            key={index}
                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                         >
                             <TableCell component="th" scope="row">
                                 {row.name}
                             </TableCell>
-                            <TableCell align="right">{row.wonMatches}</TableCell>
-                            <TableCell align="right">{row.lostMatches}</TableCell>
-                            <TableCell align="right">{row.wonSets}</TableCell>
-                            <TableCell align="right">{row.lostSets}</TableCell>
+                            <TableCell align="right">{row.matches.wins}</TableCell>
+                            <TableCell align="right">{row.matches.losts}</TableCell>
+                            <TableCell align="right">{row.sets.wins}</TableCell>
+                            <TableCell align="right">{row.sets.losts}</TableCell>
                         </TableRow>
                     ))}
                 </TableBody>

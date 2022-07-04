@@ -6,12 +6,16 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { Match, Result } from '../dto/Match';
 import { Box, Grid, Input, MenuItem } from '@mui/material';
+import { Match } from '../dto/Match';
+import { Result } from '../dto/Result';
+import { Group } from '../dto/Group';
+import { tournamentServiceFactory } from '../services/Tournament';
 
 
 interface AddResultDialogProps {
     match: Match
+    group: Group
 }
 
 interface CustomProps {
@@ -41,8 +45,7 @@ interface State {
     result: Result;
 }
 
-
-export default function AddResultDialog({ match }: AddResultDialogProps) {
+export default function AddResultDialog({ match, group }: AddResultDialogProps) {
     const [open, setOpen] = React.useState(false);
     const [validForm, setValidForm] = React.useState(false);
     const [winner, setWinner] = React.useState<string>('');
@@ -50,15 +53,21 @@ export default function AddResultDialog({ match }: AddResultDialogProps) {
         result: [],
     });
 
-    React.useEffect(() => {
-        setValidForm(winner!=='' && values.result.length === 2)
-      },[winner,values]);
+    const tournament = tournamentServiceFactory()
 
+
+    React.useEffect(() => {
+        setValidForm(winner !== '' && values.result.length === 2)
+    }, [winner, values]);
+
+    const participantNameBy = (id:string):string =>{
+        return group.participants.find(person=>person.id===id)?.name || "NOT FOUND"
+    }
 
     const handleChangee = (event: React.ChangeEvent<HTMLInputElement>) => {
         const rawResult = event.target.value.split("-")
-        let newValues = rawResult.map(val => parseInt(val)).filter(num=>num===1 || num===2 || num === 0)
-        if (newValues.reduce((a,b)=>a+b,0)>3){
+        let newValues = rawResult.map(val => parseInt(val)).filter(num => num === 1 || num === 2 || num === 0)
+        if (newValues.reduce((a, b) => a + b, 0) > 3) {
             newValues = [newValues[0]]
         }
         setValues({
@@ -74,8 +83,9 @@ export default function AddResultDialog({ match }: AddResultDialogProps) {
     const handleClose = () => {
         setOpen(false);
     };
-    const handleAdd = () =>{
-
+    const handleAdd = () => {
+        const finishedMatch = { ...match, winner, result: values.result }
+        tournament.addResultToMatch(finishedMatch, group)
         handleClose()
     }
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -101,13 +111,13 @@ export default function AddResultDialog({ match }: AddResultDialogProps) {
                             <Grid item xs={6}>
                                 <div>
                                     <h3>Player A</h3>
-                                    <div>{match.playerA}</div>
+                                    <div>{participantNameBy(match.playerA)}</div>
                                 </div>
                             </Grid>
                             <Grid item xs={6}>
                                 <div>
                                     <h3>Player B</h3>
-                                    <div>{match.playerB}</div>
+                                    <div>{participantNameBy(match.playerB)}</div>
                                 </div>
                             </Grid>
                         </Grid>
@@ -127,7 +137,7 @@ export default function AddResultDialog({ match }: AddResultDialogProps) {
                                     >
                                         {[match.playerA, match.playerB].map((option) => (
                                             <MenuItem key={option} value={option}>
-                                                {option}
+                                                {participantNameBy(option)}
                                             </MenuItem>
                                         ))}
                                     </TextField>

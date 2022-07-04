@@ -10,7 +10,7 @@ import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 
-const pages = ['All', 'Group 1', 'Group 2'];
+const pages = ['all', 'group_1', 'group_2'];
 
 interface AppBarProps {
     onGroupVisibleChange: (group: string) => void;
@@ -88,7 +88,7 @@ const ResponsiveAppBar = ({ onGroupVisibleChange }: AppBarProps) => {
                                     handleCloseNavMenu()
                                     onGroupVisibleChange(page)
                                 }}>
-                                    <Typography textAlign="center">{page}</Typography>
+                                    <Typography textAlign="center">{page.replace("_"," ")}</Typography>
                                 </MenuItem>
                             ))}
                         </Menu>
@@ -104,7 +104,7 @@ const ResponsiveAppBar = ({ onGroupVisibleChange }: AppBarProps) => {
                                 }}
                                 sx={{ my: 2, color: 'white', display: 'block' }}
                             >
-                                {page}
+                                {page.replace("_"," ")}
                             </Button>
                         ))}
                     </Box>

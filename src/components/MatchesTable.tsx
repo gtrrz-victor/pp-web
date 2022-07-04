@@ -7,34 +7,24 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import AddResultDialog from './AddResultDialog';
-import { Match, Result } from '../dto/Match';
+import { Match } from '../dto/Match';
+import { Result } from '../dto/Result';
+import { Group } from '../dto/Group';
+import { Participant } from '../dto/Participant';
 
 
 
 interface MatchesTableProps {
-    group: number
+    group: Group
 }
-
-
-function createData(
-    playerA: string,
-    playerB: string,
-    winner?: string,
-    result?: Result,
-): Match {
-    return { playerA, playerB, winner, result };
-}
-
-const rows = [
-    createData('Alberto', 'Alberto2'),
-    createData('Alberto1', 'Alberto3', 'Alberto1', [1, 2]),
-    createData('Alberto2', 'Alberto3', 'Alberto3', [13, 2]),
-    createData('Alberto3', 'Alberto3', 'Alberto4', [14, 2]),
-]
-
 
 const MatchesTable = ({ group }: MatchesTableProps) => {
-    rows.sort((a, b) => (a.winner !== undefined) ? -1 : 1)
+    const rows = [...group.matchs]
+    rows.sort((a) => (a.winner !== undefined) ? -1 : 1)
+
+    const participantNameBy = (id:string):string =>{
+        return group.participants.find(person=>person.id===id)?.name || "NOT FOUND"
+    }
 
     return (
         <TableContainer component={Paper}>
@@ -48,19 +38,19 @@ const MatchesTable = ({ group }: MatchesTableProps) => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {rows.map((row) => (
+                    {rows.map((row, index) => (
                         <TableRow
-                            key={row.playerA}
+                            key={index}
                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                         >
                             <TableCell component="th" scope="row">
-                                {row.playerA}
+                                {participantNameBy(row.playerA)}
                             </TableCell>
                             <TableCell component="th" scope="row">
-                                {row.playerB}
+                                {participantNameBy(row.playerB)}
                             </TableCell>
                             <TableCell align="right">{row.winner || "---"}</TableCell>
-                            <TableCell align="right">{row.result?.join("-") || <AddResultDialog match={row}/>}</TableCell>
+                            <TableCell align="right">{row.result?.join("-") || <AddResultDialog match={row} group={group} />}</TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
