@@ -7,10 +7,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import AddResultDialog from './AddResultDialog';
-import { Match } from '../dto/Match';
-import { Result } from '../dto/Result';
 import { Group } from '../dto/Group';
-import { Participant } from '../dto/Participant';
 
 
 

@@ -7,7 +7,6 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { Group } from '../dto/Group';
-import { Participant } from '../dto/Participant';
 
 
 interface MembersTableProps {

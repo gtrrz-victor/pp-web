@@ -4,7 +4,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import ResponsiveAppBar from './components/ResponsiveAppBar';
 import MembersTable from './components/MembersTable';
 import MatchesTable from './components/MatchesTable';
-import { tournamentServiceFactory  } from './services/Tournament';
+import { tournamentServiceFactory } from './services/Tournament';
 import { Group } from './dto/Group';
 
 function App() {
@@ -22,7 +22,7 @@ function App() {
     newAlerts.splice(index, 1)
     setAlerts(newAlerts)
   }
-  const parseGroupId= (groupId:string)=>groupId.replace("_"," ").toUpperCase()
+  const parseGroupId = (groupId: string) => groupId.replace("_", " ").toUpperCase()
 
   React.useEffect(() => {
     try {
@@ -32,14 +32,14 @@ function App() {
     } catch (err: any) {
       setAlerts([...alerts, `${err}`])
     }
-  }, [])
+  }, [alerts, groups, tournament])
 
   return (
     <div>
       <ResponsiveAppBar onGroupVisibleChange={changeGroupVisible} />
       <Container maxWidth="md" style={{ "paddingTop": "40px" }}>
         <Grid container spacing={2}>
-          {groups.filter(group=>groupVisible==='all' || groupVisible===group.id).map((group, index) =>
+          {groups.filter(group => groupVisible === 'all' || groupVisible === group.id).map((group, index) =>
             <Grid item xs={12} key={index}>
               <Stack spacing={4}>
                 <h2>{parseGroupId(group.id!)}</h2>
