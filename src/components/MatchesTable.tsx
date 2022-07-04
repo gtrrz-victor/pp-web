@@ -13,13 +13,15 @@ import { Group } from '../dto/Group';
 
 interface MatchesTableProps {
     group: Group
+    cb(err?:any):void
 }
 
-const MatchesTable = ({ group }: MatchesTableProps) => {
+const MatchesTable = ({ group, cb }: MatchesTableProps) => {
     const rows = [...group.matchs]
     rows.sort((a) => (a.winner !== undefined) ? -1 : 1)
 
-    const participantNameBy = (id:string):string =>{
+    const participantNameBy = (id?:string):string =>{
+        if (id === undefined) return ""
         return group.participants.find(person=>person.id===id)?.name || "NOT FOUND"
     }
 
@@ -46,8 +48,8 @@ const MatchesTable = ({ group }: MatchesTableProps) => {
                             <TableCell component="th" scope="row">
                                 {participantNameBy(row.playerB)}
                             </TableCell>
-                            <TableCell align="right">{row.winner || "---"}</TableCell>
-                            <TableCell align="right">{row.result?.join("-") || <AddResultDialog match={row} group={group} />}</TableCell>
+                            <TableCell align="right">{participantNameBy(row.winner) || "---"}</TableCell>
+                            <TableCell align="right">{row.result?.join("-") || <AddResultDialog match={row} group={group} cb={cb}/>}</TableCell>
                         </TableRow>
                     ))}
                 </TableBody>

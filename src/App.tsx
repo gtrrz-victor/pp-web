@@ -11,11 +11,24 @@ function App() {
   const [groupVisible, setGroupVisible] = React.useState<string>("all");
   const [alerts, setAlerts] = React.useState<string[]>([]);
   const [groups, setGroups] = React.useState<Group[]>([])
-  const tournament = tournamentServiceFactory()
 
+  const onAddMatchResult = (err?: any) => {
+    if (err !== undefined) setAlerts([`${err}`])
+    else fetchData()
+  }
   const changeGroupVisible = (group: string) => {
     setGroupVisible(group)
   };
+
+  const fetchData = () => {
+    try {
+      tournamentServiceFactory().groups().then(setGroups).catch((err: Error) => {
+        setAlerts([err.message])
+      })
+    } catch (err: any) {
+      setAlerts([`${err}`])
+    }
+  }
 
   const removeAlert = (index: number) => {
     const newAlerts = [...alerts]
@@ -25,14 +38,8 @@ function App() {
   const parseGroupId = (groupId: string) => groupId.replace("_", " ").toUpperCase()
 
   React.useEffect(() => {
-    try {
-      tournament.groups().then(setGroups).catch((err: Error) => {
-        setAlerts([...alerts, err.message])
-      })
-    } catch (err: any) {
-      setAlerts([...alerts, `${err}`])
-    }
-  }, [alerts, groups, tournament])
+    fetchData()
+  }, [])
 
   return (
     <div>
@@ -44,7 +51,7 @@ function App() {
               <Stack spacing={4}>
                 <h2>{parseGroupId(group.id!)}</h2>
                 <MembersTable group={group}></MembersTable>
-                <MatchesTable group={group}></MatchesTable>
+                <MatchesTable group={group} cb={onAddMatchResult}></MatchesTable>
               </Stack>
             </Grid>)
           }

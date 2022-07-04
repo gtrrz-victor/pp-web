@@ -16,6 +16,7 @@ import { tournamentServiceFactory } from '../services/Tournament';
 interface AddResultDialogProps {
     match: Match
     group: Group
+    cb(err?:any):void
 }
 
 interface CustomProps {
@@ -45,7 +46,7 @@ interface State {
     result: Result;
 }
 
-export default function AddResultDialog({ match, group }: AddResultDialogProps) {
+export default function AddResultDialog({ match, group, cb }: AddResultDialogProps) {
     const [open, setOpen] = React.useState(false);
     const [validForm, setValidForm] = React.useState(false);
     const [winner, setWinner] = React.useState<string>('');
@@ -83,9 +84,14 @@ export default function AddResultDialog({ match, group }: AddResultDialogProps) 
     const handleClose = () => {
         setOpen(false);
     };
-    const handleAdd = () => {
+    const handleAdd = async() => {
         const finishedMatch = { ...match, winner, result: values.result }
-        tournament.addResultToMatch(finishedMatch, group)
+        try {
+            await tournament.addResultToMatch(finishedMatch, group)
+            cb()
+        }catch(err){
+            cb(err)
+        }
         handleClose()
     }
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
