@@ -16,7 +16,8 @@ import { tournamentServiceFactory } from '../services/Tournament';
 interface AddResultDialogProps {
     match: Match
     group: Group
-    cb(err?:any):void
+    cb(err?: any): void
+    large?: boolean
 }
 
 interface CustomProps {
@@ -46,7 +47,7 @@ interface State {
     result: Result;
 }
 
-export default function AddResultDialog({ match, group, cb }: AddResultDialogProps) {
+export default function AddResultDialog({ match, group, cb, large }: AddResultDialogProps) {
     const [open, setOpen] = React.useState(false);
     const [validForm, setValidForm] = React.useState(false);
     const [winner, setWinner] = React.useState<string>('');
@@ -55,14 +56,14 @@ export default function AddResultDialog({ match, group, cb }: AddResultDialogPro
     });
 
     const tournament = tournamentServiceFactory()
-
+    const buttonText = large ? 'Add Result' : 'Add'
 
     React.useEffect(() => {
         setValidForm(winner !== '' && values.result.length === 2)
     }, [winner, values]);
 
-    const participantNameBy = (id:string):string =>{
-        return group.participants.find(person=>person.id===id)?.name || "NOT FOUND"
+    const participantNameBy = (id: string): string => {
+        return group.participants.find(person => person.id === id)?.name || "NOT FOUND"
     }
 
     const handleChangee = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -84,12 +85,12 @@ export default function AddResultDialog({ match, group, cb }: AddResultDialogPro
     const handleClose = () => {
         setOpen(false);
     };
-    const handleAdd = async() => {
+    const handleAdd = async () => {
         const finishedMatch = { ...match, winner, result: values.result }
         try {
             await tournament.addResultToMatch(finishedMatch, group)
             cb()
-        }catch(err){
+        } catch (err) {
             cb(err)
         }
         handleClose()
@@ -101,7 +102,7 @@ export default function AddResultDialog({ match, group, cb }: AddResultDialogPro
 
     return (
         <div>
-            <Button size="small" variant="outlined" onClick={handleClickOpen}>Add</Button>
+            <Button size="small" variant="outlined" onClick={handleClickOpen}>{buttonText}</Button>
             <Dialog open={open} onClose={handleClose} fullWidth={true}>
                 <DialogTitle>Add Match Result</DialogTitle>
                 <DialogContent>
@@ -129,7 +130,7 @@ export default function AddResultDialog({ match, group, cb }: AddResultDialogPro
                         </Grid>
 
                         <Grid container spacing={2}>
-                            <Grid item xs={6}>
+                            <Grid item xs={12} md={6}>
                                 <div>
                                     <h3>Winner</h3>
                                     <TextField
@@ -149,7 +150,7 @@ export default function AddResultDialog({ match, group, cb }: AddResultDialogPro
                                     </TextField>
                                 </div>
                             </Grid>
-                            <Grid item xs={6}>
+                            <Grid item xs={12} md={6}>
                                 <div>
                                     <h3>Result</h3>
                                     <Input
