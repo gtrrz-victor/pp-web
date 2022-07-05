@@ -3,7 +3,7 @@ import { Group } from "../dto/Group";
 import { Match } from "../dto/Match";
 // import { Participant } from "../dto/Participant";
 
-const baseUrl = "http://ec2-3-24-218-176.ap-southeast-2.compute.amazonaws.com:3000"
+const baseUrl = "https://pp-api-load-balancer-262370604.ap-southeast-2.elb.amazonaws.com"
 export class TournamentDataProvider implements Tournament {
     async groups(): Promise<Group[]> {
         const response = await fetch(`${baseUrl}/pptournament/groups`)
