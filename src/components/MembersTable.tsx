@@ -31,8 +31,8 @@ const MembersTable = ({ group }: MembersTableProps) => {
                 <TableHead>
                     <TableRow>
                         <TableCell>Name</TableCell>
-                        <TableCell align="right">Won matchs</TableCell>
-                        <TableCell align="right">Lost matchs</TableCell>
+                        <TableCell align="right">Won matches</TableCell>
+                        <TableCell align="right">Lost matches</TableCell>
                         <TableCell align="right">Won sets</TableCell>
                         <TableCell align="right">Lost sets</TableCell>
                     </TableRow>

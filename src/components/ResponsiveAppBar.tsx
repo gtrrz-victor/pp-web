@@ -29,7 +29,7 @@ const ResponsiveAppBar = ({ onGroupVisibleChange }: AppBarProps) => {
 
 
     return (
-        <AppBar position="static">
+        <AppBar component="nav">
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
                     <div style={{ "width": "70px" }}>
